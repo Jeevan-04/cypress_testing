@@ -121,6 +121,8 @@ The "DEPART THE PALACE" button is clicked, returning the user to the landing pag
 
 Watch the complete, end-to-end automated headed browser run recorded by Cypress:
 
+* **Direct Video File:** [cypress/videos/spec.cy.js.mp4](cypress/videos/spec.cy.js.mp4)
+
 <video src="cypress/videos/spec.cy.js.mp4" controls width="100%"></video>
 
 ---
