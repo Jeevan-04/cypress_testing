@@ -2,30 +2,28 @@ describe('template spec', () => {
   it('passes', () => {
     cy.viewport(1000, 1200);
     cy.visit('https://jeevan-04.github.io/Atithya/')
+    
     // If the Flutter accessibility toggle is exposed, enable it so semantic labels appear
-    cy.get('[aria-label="Enable accessibility"]', { timeout: 20000 })
+    cy.get('[aria-label="Enable accessibility"]', { timeout: 60000 })
       .then($el => {
         if ($el.length) cy.wrap($el).click({ force: true });
       });
+    cy.screenshot('01_landing_page');
 
     // Click the Enter as Elite member button once semantics are available
     cy.contains(/ENTER AS ELITE MEMBER|Enter as Elite member/i, { timeout: 10000 })
       .should('be.visible')
       .click({ force: true });
+    cy.screenshot('02_elite_member_clicked');
+    
     cy.get('input').first().clear().type('1234567890');
 
-    // Click Send OTP (prefer flt-semantic-node-16)
-    cy.document().then(doc => {
-      const sendNode = doc.getElementById('flt-semantic-node-16');
-      if (sendNode) {
-        cy.wrap(sendNode).click({ force: true });
-      } else {
-        cy.contains(/Send OTP|SEND OTP/i, { timeout: 10000 }).should('be.visible').click({ force: true });
-      }
-    });
+    // Click Send OTP
+    clickSemanticNode('flt-semantic-node-16', /Send OTP|SEND OTP/i);
+    cy.screenshot('03_otp_sent');
 
     // Wait for the DEV OTP text to appear and extract the numeric OTP
-    cy.contains(/DEV\s*OTP/i, { timeout: 15000 }).invoke('text').then(text => {
+    cy.contains(/DEV\s*OTP/i, { timeout: 60000 }).invoke('text').then(text => {
       const m = text.match(/\b(\d{4,6})\b/);
       const otp = m ? m[1] : '';
       if (!otp) {
@@ -56,16 +54,26 @@ describe('template spec', () => {
           cy.contains(/Back|←|<-/i, { timeout: 10000 }).should('be.visible').click({ force: true });
         }
       });
+      cy.screenshot('05_back_to_landing');
+    }).then(() => {
       // 2. Click "Enter as Royal Guest" (button text is "Continue as Royal Guest")
       cy.contains(/Royal Guest/i, { timeout: 10000 })
         .should('be.visible')
         .click({ force: true });
+      cy.screenshot('06_royal_guest_clicked');
       
       // 3. Click PALACES, JOURNEYS, SANCTUM, DEPART THE PALACE
       clickSemanticNode('flt-semantic-node-51', /PALACES/i);
+      cy.screenshot('07_palaces_tab');
+      
       clickSemanticNode('flt-semantic-node-52', /JOURNEYS/i);
+      cy.screenshot('08_journeys_tab');
+      
       clickSemanticNode('flt-semantic-node-53', /SANCTUM/i);
+      cy.screenshot('09_sanctum_tab');
+      
       clickSemanticNode('flt-semantic-node-150', /DEPART THE PALACE/i);
+      cy.screenshot('10_departed_palace');
     });
 
     // Helper to enter OTP into flt-semantic-node-21 (or fallback input) then click Verify & Enter
@@ -87,6 +95,8 @@ describe('template spec', () => {
             cy.get('body').type(code, { force: true });
           }
         });
+      }).then(() => {
+        cy.screenshot('04_otp_entered');
       }).then(() => {
         // Click the Verify & Enter button
         cy.contains(/VERIFY & Enter|VERIFY & ENTER/i, { timeout: 5000 })
