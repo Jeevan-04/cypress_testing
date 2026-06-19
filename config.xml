@@ -23,49 +23,25 @@
       <abortPrevious>false</abortPrevious>
     </org.jenkinsci.plugins.workflow.job.properties.DisableConcurrentBuildsJobProperty>
   </properties>
-  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@4331.v9d06ed4658ff">
-    <script>pipeline {
-    agent any
-
-    options {
-        timestamps()
-        disableConcurrentBuilds()
-    }
-
-    triggers {
-        cron('H H * * 1')
-    }
-
-    environment {
-        CI = 'true'
-    }
-
-    stages {
-      stage('Checkout') {
-        steps {
-          git url: '/Users/jeevan/Desktop/Cypress', branch: 'main'
-        }
-      }
-
-      stage('Run Cypress Tests') {
-        steps {
-          sh 'npm ci'
-          sh 'npx cypress run --spec "cypress/e2e/spec.cy.js"'
-        }
-      }
-    }
-
-    post {
-      always {
-        archiveArtifacts artifacts: 'cypress/screenshots/**, cypress/videos/**', allowEmptyArchive: true
-      }
-      failure {
-        echo 'Cypress tests failed'
-      }
-    }
-}
-</script>
-    <sandbox>true</sandbox>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition" plugin="workflow-cps@4331.v9d06ed4658ff">
+    <scm class="hudson.plugins.git.GitSCM">
+      <configVersion>2</configVersion>
+      <userRemoteConfigs>
+        <hudson.plugins.git.UserRemoteConfig>
+          <url>https://github.com/Jeevan-04/cypress_testing.git</url>
+        </hudson.plugins.git.UserRemoteConfig>
+      </userRemoteConfigs>
+      <branches>
+        <hudson.plugins.git.BranchSpec>
+          <name>*/main</name>
+        </hudson.plugins.git.BranchSpec>
+      </branches>
+      <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+      <submoduleCfg class="empty-list"/>
+      <extensions/>
+    </scm>
+    <scriptPath>Jenkinsfile</scriptPath>
+    <lightweight>true</lightweight>
   </definition>
   <triggers/>
   <disabled>false</disabled>

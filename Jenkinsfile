@@ -11,7 +11,7 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        git url: '/Users/jeevan/Desktop/Cypress', branch: 'main'
+        checkout scm
       }
     }
 
