@@ -17,13 +17,8 @@ pipeline {
 
     stage('Run Cypress Tests') {
       steps {
-        script {
-          // Use Cypress official included image to ensure Cypress and browsers are present.
-          docker.image('cypress/included:15.15.0').inside {
-            sh 'npm ci'
-            sh 'npx cypress run --spec "cypress/e2e/spec.cy.js"'
-          }
-        }
+        sh 'npm ci'
+        sh 'npx cypress run --spec "cypress/e2e/spec.cy.js"'
       }
     }
   }

@@ -49,12 +49,8 @@
 
       stage('Run Cypress Tests') {
         steps {
-          script {
-            docker.image('cypress/included:15.15.0').inside {
-              sh 'npm ci'
-              sh 'npx cypress run --spec "cypress/e2e/spec.cy.js"'
-            }
-          }
+          sh 'npm ci'
+          sh 'npx cypress run --spec "cypress/e2e/spec.cy.js"'
         }
       }
     }
