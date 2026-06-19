@@ -42,7 +42,9 @@
 
     stages {
       stage('Checkout') {
-        steps { checkout scm }
+        steps {
+          git url: '/Users/jeevan/Desktop/Cypress', branch: 'main'
+        }
       }
 
       stage('Run Cypress Tests') {
